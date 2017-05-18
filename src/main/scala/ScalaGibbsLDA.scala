@@ -13,7 +13,7 @@ import main.scala.obj.Parameter
 object ScalaGibbsLDA {
   def main(args: Array[String]): Unit = {
     println("Current directory: " + System.getProperty("user.dir"))
-    println("#################### Collapsed Gibbs sampling LDA ####################")
+    println("#################### Gibbs sampling LDA ####################")
     try {
       var cmd = LDACmdOption.getArguments(args)
       if (cmd.hasOption("help")) {
