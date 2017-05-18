@@ -19,7 +19,7 @@ class Estimator {
     if (!isContinue) {
       if (!trnModel.initNewModel(params))
         false
-      Dictionary2File.writeWordMap(params.directory + File.separator + params.wordMapFileName, trnModel.data.localDict.word2id)
+      Dictionary2File.writeWordMap(params.directory + File.separator + "output" + File.separator + params.wordMapFileName, trnModel.data.localDict.word2id)
     } else {
       if (!trnModel.initEstimatedModel(params))
         false
@@ -118,8 +118,8 @@ class Estimator {
   }
 
   def computeTheta(): Unit = {
-    for (m <- 0 to trnModel.M) {
-      for (k <- 0 to trnModel.K) {
+    for (m <- 0 until trnModel.M) {
+      for (k <- 0 until trnModel.K) {
         trnModel.theta(m)(k) = (trnModel.nd(m)(k) + trnModel.alpha) / (trnModel.ndsum(m) + trnModel.K * trnModel.alpha)
       }
     }

@@ -108,26 +108,26 @@ object Model2File {
    * Save model
    */
   def saveModel(modelName: String, model: Model): Boolean = {
-    if (!saveModelTAssign(model.dir + File.separator + model.modelName + model.tassignSuffix, model.data, model.z)) {
-      false
+    if (!saveModelTAssign(model.dir + File.separator + "output" + File.separator + model.modelName + model.tassignSuffix, model.data, model.z)) {
+      return false
     }
 
-    if (!saveModelOthers(model.dir + File.separator + model.modelName + model.othersSuffix, model.alpha, model.beta, model.K, model.M, model.V, model.liter)) {
-      false
+    if (!saveModelOthers(model.dir + File.separator + "output" + File.separator + model.modelName + model.othersSuffix, model.alpha, model.beta, model.K, model.M, model.V, model.liter)) {
+      return false
     }
 
-    if (!saveModelTheta(model.dir + File.separator + model.modelName + model.thetaSuffix, model.theta, model.M, model.K)) {
-      false
+    if (!saveModelTheta(model.dir + File.separator + "output" + File.separator + model.modelName + model.thetaSuffix, model.theta, model.M, model.K)) {
+      return false
     }
 
-    if (!saveModelPhi(model.dir + File.separator + model.modelName + model.phiSuffix, model.phi, model.K, model.V)) {
-      false
+    if (!saveModelPhi(model.dir + File.separator + "output" + File.separator + model.modelName + model.phiSuffix, model.phi, model.K, model.V)) {
+      return false
     }
 
     if (model.twords > 0) {
-      if (!saveModelTwords(model.dir + File.separator + model.modelName + model.twordsSuffix, model.twords, model.K, model.V, model.phi, model.data))
-        false
+      if (!saveModelTwords(model.dir + File.separator + "output" + File.separator + model.modelName + model.twordsSuffix, model.twords, model.K, model.V, model.phi, model.data))
+        return false
     }
-    true
+    return true
   }
 }

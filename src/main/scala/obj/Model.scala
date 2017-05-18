@@ -8,6 +8,7 @@ import main.scala.helper.Constants
 import main.java.commons.cli.CommandLine
 import main.scala.connector.File2LDADataset
 import main.scala.connector.File2Model
+import scala.util.Random
 
 /**
  * Lop bieu dien MODEL cua LDA
@@ -56,7 +57,7 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
    */
   def init(params: Parameter): Boolean = {
     if (params == null)
-      false
+      return false
 
     modelName = params.modelname
     K = params.K
@@ -78,7 +79,7 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
     twords = params.twords
     wordMapFile = params.wordMapFileName
 
-    return true;
+    return true
   }
 
   /**
@@ -86,14 +87,15 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
    */
   def initNewModel(params: Parameter): Boolean = {
     if (!init(params))
-      false
+      return false
 
+    val random = new Random
     p = new Array[Double](K)
 
     data = File2LDADataset.readDataSet(dir + File.separator + dfile)
     if (data == null) {
       println("Fail to read training data!\n")
-      false
+      return false
     }
 
     //+ allocate memory and assign values for variables		
@@ -130,15 +132,16 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
       ndsum(m) = 0
     }
 
-    z = new Array[Array[Int]](M)
+    z = Array.ofDim[Array[Int]](M)
     for (m <- 0 until M) {
       val N = data.docs(m).length
       //z(m) = new Array[Int]
 
       //initilize for z
+      z(m) = Array.ofDim[Int](N)
       for (n <- 0 until N) {
-        val topic = Math.floor(Math.random() * K).toInt
-        z(m) :+= topic
+        val topic = random.nextInt(K)
+        z(m)(n) = topic
 
         // number of instances of word assigned to topic j
         nw(data.docs(m).words(n))(topic) += 1
@@ -154,7 +157,7 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
     theta = Array.ofDim[Double](M, K)
     phi = Array.ofDim[Double](K, V)
 
-    true
+    return true
   }
 
   /**
@@ -163,8 +166,9 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
    */
   def initNewModel(params: Parameter, newData: LDADataset, trnModel: Model): Boolean = {
     if (!init(params))
-      false
+      return false
 
+    val random = new Random
     K = trnModel.K
     alpha = trnModel.alpha
     beta = trnModel.beta;
@@ -216,9 +220,10 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
       //z(m) = new Array[Int]
 
       //initilize for z
+      z(m) = new Array[Int](N)
       for (n <- 0 until N) {
-        val topic = Math.floor(Math.random() * K).toInt
-        z(m) :+= topic
+        val topic = random.nextInt(K)
+        z(m)(n) = topic
 
         // number of instances of word assigned to topic j
         nw(data.docs(m).words(n))(topic) += 1
@@ -234,7 +239,7 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
     theta = Array.ofDim[Double](M, K)
     phi = Array.ofDim[Double](K, V)
 
-    true
+    return true
   }
 
   /**
@@ -243,12 +248,12 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
    */
   def initNewModel(params: Parameter, trnModel: Model): Boolean = {
     if (!init(params))
-      false
+      return false
 
     val dataset = File2LDADataset.readDataSet(dir + File.separator + dfile, trnModel.data.localDict)
     if (dataset == null) {
       println("Fail to read dataset!\n")
-      false
+      return false
     }
 
     initNewModel(params, dataset, trnModel)
@@ -259,7 +264,7 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
    */
   def initEstimatedModel(params: Parameter): Boolean = {
     if (!init(params))
-      false
+      return false
 
     p = new Array[Double](K)
 
@@ -270,7 +275,7 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
     // load model, i.e., read z and trndata
     if (!File2Model.loadModel(dir, modelName, othersSuffix, tassignSuffix, wordMapFile)) {
       System.out.println("Fail to load word-topic assignment file of the model!\n");
-      false
+      return false
     }
 
     System.out.println("Model loaded:");
@@ -325,6 +330,6 @@ class Model(var tassignSuffix: String, var thetaSuffix: String, var phiSuffix: S
     theta = Array.ofDim[Double](M, K)
     phi = Array.ofDim[Double](K, V)
 
-    true
+    return true
   }
 }

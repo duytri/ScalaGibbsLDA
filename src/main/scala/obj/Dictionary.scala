@@ -1,6 +1,7 @@
 package main.scala.obj
 
 import scala.collection.mutable.Map
+import scala.collection.mutable.HashMap
 
 /**
  * Lop dai dien cho TU DIEN du lieu
@@ -13,7 +14,7 @@ class Dictionary(var word2id: Map[String, Int], var id2word: Map[Int, String]) {
   // Other constructors
   //----------------------------------------------------
   def this() = {
-    this(null, null)
+    this(new HashMap[String, Int], new HashMap[Int, String])
   }
 
   /**
@@ -38,7 +39,7 @@ class Dictionary(var word2id: Map[String, Int], var id2word: Map[Int, String]) {
   def getWord(id: Int): String = {
     if (id2word.contains(id))
       id2word.get(id).get
-    null
+    else null
   }
 
   /**
@@ -50,7 +51,7 @@ class Dictionary(var word2id: Map[String, Int], var id2word: Map[Int, String]) {
   def getId(word: String): Int = {
     if (word2id.contains(word))
       word2id.get(word).get
-    -1
+    else -1
   }
 
   /**
