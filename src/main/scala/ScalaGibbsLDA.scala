@@ -9,6 +9,7 @@ import main.java.commons.cli.CommandLine
 import main.java.commons.cli.Option
 import main.java.commons.cli.UnrecognizedOptionException
 import main.scala.obj.Parameter
+import main.scala.helper.Utils
 
 object ScalaGibbsLDA {
   def main(args: Array[String]): Unit = {
@@ -32,26 +33,27 @@ object ScalaGibbsLDA {
           val startTime = System.currentTimeMillis()
 
           //~~~~~~~~~~~ Body ~~~~~~~~~~~
-          println("#################### DAY LA PHAN THAN CUA CHUONG TRINH ####################")
+          //println("#################### DAY LA PHAN THAN CUA CHUONG TRINH ####################")
 
           if (cmd.hasOption("inference")) {
             // inf
             var inferencer = new Inferencer()
+            println("Preparing...")
             inferencer.init(params)
-
+            println("Inferencing...")
             var newModel = inferencer.inference(params)
 
             for (i <- 0 until newModel.phi.length) {
               //phi: K * V
-              println("-----------------------\ntopic" + i + " : ");
-              for (j <- 0 until 10) {
-                println(inferencer.globalDict.id2word.get(j).get + "\t" + newModel.phi(i)(j))
-              }
+              println("-----------------------\nTopic " + (i + 1) + "th: ")
+              Utils.printTopWords(i, newModel.V, newModel.phi, newModel.data, 10)
             }
           } else { // est or estc
             // default: est
             var estimate = new Estimator
+            println("Preparing...")
             estimate.init(cmd.hasOption("estcon"), params)
+            println("Estimating...")
             estimate.estimate(params.savestep)
           }
 
