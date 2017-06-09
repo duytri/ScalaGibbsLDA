@@ -62,7 +62,7 @@ class Estimator {
     computeTheta()
     computePhi()
     //trnModel.liter -= 1
-    Model2File.saveModel(trnModel.modelName + "-final", trnModel)
+    //Model2File.saveModel(trnModel.modelName + "-final", trnModel)
   }
 
   /**
@@ -132,5 +132,24 @@ class Estimator {
         trnModel.phi(k)(w) = (trnModel.nw(w)(k) + trnModel.beta) / (trnModel.nwsum(k) + trnModel.V * trnModel.beta)
       }
     }
+  }
+
+  def computePerplexity(): Double = {
+    var totalWords = 0d
+    var docSum = 0d
+    for (m <- 0 until trnModel.M) {
+      val W = trnModel.data.docs(m).length
+      totalWords += W
+      var wordSum = 0d
+      for (w <- 0 until W) {
+        var topicSum = 0d
+        for (k <- 0 until trnModel.K) {
+          topicSum += trnModel.theta(m)(k) * trnModel.phi(k)(w)
+        }
+        wordSum += math.log(topicSum)
+      }
+      docSum += wordSum
+    }
+    math.exp(-1 * docSum / totalWords) // perplexity
   }
 }

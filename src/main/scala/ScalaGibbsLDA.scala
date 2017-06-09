@@ -42,6 +42,8 @@ object ScalaGibbsLDA {
             inferencer.init(params)
             println("Inferencing...")
             var newModel = inferencer.inference(params)
+            println(s"Completed! Perplexity of training model: ${inferencer.computePerplexity()}")
+            println(s"\tPerplexity of testing model: ${inferencer.computeInfPerplexity()}")
 
             for (i <- 0 until newModel.phi.length) {
               //phi: K * V
@@ -55,6 +57,7 @@ object ScalaGibbsLDA {
             estimate.init(cmd.hasOption("estcon"), params)
             println("Estimating...")
             estimate.estimate(params.savestep)
+            println(s"Completed! Perplexity of this model: ${estimate.computePerplexity()}")
           }
 
           //~~~~~~~~~~~ Timer ~~~~~~~~~~~

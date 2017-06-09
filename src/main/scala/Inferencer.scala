@@ -191,4 +191,42 @@ class Inferencer {
       }
     }
   }
+  
+  def computePerplexity(): Double = {
+    var totalWords = 0d
+    var docSum = 0d
+    for (m <- 0 until trnModel.M) {
+      val W = trnModel.data.docs(m).length
+      totalWords += W
+      var wordSum = 0d
+      for (w <- 0 until W) {
+        var topicSum = 0d
+        for (k <- 0 until trnModel.K) {
+          topicSum += trnModel.theta(m)(k) * trnModel.phi(k)(w)
+        }
+        wordSum += math.log(topicSum)
+      }
+      docSum += wordSum
+    }
+    math.exp(-1 * docSum / totalWords) // perplexity
+  }
+  
+  def computeInfPerplexity(): Double = {
+    var totalWords = 0d
+    var docSum = 0d
+    for (m <- 0 until newModel.M) {
+      val W = newModel.data.docs(m).length
+      totalWords += W
+      var wordSum = 0d
+      for (w <- 0 until W) {
+        var topicSum = 0d
+        for (k <- 0 until newModel.K) {
+          topicSum += newModel.theta(m)(k) * newModel.phi(k)(w)
+        }
+        wordSum += math.log(topicSum)
+      }
+      docSum += wordSum
+    }
+    math.exp(-1 * docSum / totalWords) // perplexity
+  }
 }
