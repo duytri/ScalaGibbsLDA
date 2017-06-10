@@ -42,13 +42,13 @@ object ScalaGibbsLDA {
             inferencer.init(params)
             println("Inferencing...")
             var newModel = inferencer.inference(params)
-            println(s"Completed! Perplexity of training model: ${inferencer.computePerplexity()}")
-            println(s"\tPerplexity of testing model: ${inferencer.computeInfPerplexity()}")
+            println(s"Completed! Perplexity of training model: ${inferencer.computePerplexity}")
+            println(s"\tPerplexity of testing model: ${inferencer.computeInfPerplexity}")
 
             for (i <- 0 until newModel.phi.length) {
               //phi: K * V
               println("-----------------------\nTopic " + (i + 1) + "th: ")
-              Utils.printTopWords(i, newModel.V, newModel.phi, newModel.data, 10)
+              Utils.printTopWords(i, newModel.V, newModel.phi, newModel.data, params.twords)
             }
           } else { // est or estc
             // default: est

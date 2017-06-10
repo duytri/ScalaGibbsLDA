@@ -62,7 +62,7 @@ class Estimator {
     computeTheta()
     computePhi()
     //trnModel.liter -= 1
-    //Model2File.saveModel(trnModel.modelName + "-final", trnModel)
+    Model2File.saveModel(trnModel.modelName + "-final", trnModel)
   }
 
   /**

@@ -191,7 +191,7 @@ class Inferencer {
       }
     }
   }
-  
+
   def computePerplexity(): Double = {
     var totalWords = 0d
     var docSum = 0d
@@ -210,7 +210,7 @@ class Inferencer {
     }
     math.exp(-1 * docSum / totalWords) // perplexity
   }
-  
+
   def computeInfPerplexity(): Double = {
     var totalWords = 0d
     var docSum = 0d
