@@ -196,10 +196,9 @@ class Inferencer {
     var totalWords = 0d
     var docSum = 0d
     for (m <- 0 until trnModel.M) {
-      val W = trnModel.data.docs(m).length
-      totalWords += W
+      totalWords += trnModel.data.docs(m).length
       var wordSum = 0d
-      for (w <- 0 until W) {
+      for (w <- 0 until trnModel.V) {
         var topicSum = 0d
         for (k <- 0 until trnModel.K) {
           topicSum += trnModel.theta(m)(k) * trnModel.phi(k)(w)
@@ -215,10 +214,9 @@ class Inferencer {
     var totalWords = 0d
     var docSum = 0d
     for (m <- 0 until newModel.M) {
-      val W = newModel.data.docs(m).length
-      totalWords += W
+      totalWords += newModel.data.docs(m).length
       var wordSum = 0d
-      for (w <- 0 until W) {
+      for (w <- 0 until newModel.V) {
         var topicSum = 0d
         for (k <- 0 until newModel.K) {
           topicSum += newModel.theta(m)(k) * newModel.phi(k)(w)
