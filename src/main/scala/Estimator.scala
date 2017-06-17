@@ -138,9 +138,11 @@ class Estimator {
     var totalWords = 0d
     var docSum = 0d
     for (m <- 0 until trnModel.M) {
-      totalWords += trnModel.data.docs(m).length
+      val nw = trnModel.data.docs(m).length
+      totalWords += nw
       var wordSum = 0d
-      for (w <- 0 until trnModel.V) {
+      for (n <- 0 until nw) {
+        val w = trnModel.data.docs(m).words(n)
         var topicSum = 0d
         for (k <- 0 until trnModel.K) {
           topicSum += trnModel.theta(m)(k) * trnModel.phi(k)(w)
@@ -149,6 +151,7 @@ class Estimator {
       }
       docSum += wordSum
     }
+    //println(s"docSum: $docSum, totalWords: $totalWords")
     math.exp(-1 * docSum / totalWords) // perplexity
   }
 }
