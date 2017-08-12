@@ -49,11 +49,15 @@ class LDADataset(var localDict: Dictionary, var docs: ArrayBuffer[Document], var
    * @param idx index in the document array
    */
   def setDoc(content: String, idx: Int): Unit = {
-    //println(content)
+    val specialChars = Array((" "), (";"), ("/"), ("."), (","), ("\""), ("\t"), ("#"), ("\u00a0"), ("("), (")"), ("["), ("]"), ("!"), ("?"), ("'"), (":"), ("&"), ("="), ("-"), ("<"), (">"), ("–"), ("{"), ("}"), ("\\"), ("..."), ("*"), ("+"), ("$"), ("@"), ("\u00a9"), ("\u00ae"), ("\u00ad"), ("\u0323"), ("”"), ("“"), ("\""), ("_"), ("…"), ("’"))
     if (0 <= idx && idx < M) {
       var ids = new ArrayBuffer[Int]
 
-      content.split("[ \\t\\n]").foreach(word => {
+      content.split("[ \\t\\n]").foreach(item => {
+        var word = item.trim.toLowerCase
+        specialChars.foreach(c => {
+          word = word.replace(c, "")
+        })
         var _id = localDict.word2id.size
 
         if (localDict.contains(word))
@@ -77,9 +81,9 @@ class LDADataset(var localDict: Dictionary, var docs: ArrayBuffer[Document], var
           ids.append(_id)
         }
       })
-      
+
       val doc = new Document(ids, content)
-      
+
       docs.insert(idx, doc)
       V = localDict.word2id.size
     }
