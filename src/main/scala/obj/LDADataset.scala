@@ -58,27 +58,29 @@ class LDADataset(var localDict: Dictionary, var docs: ArrayBuffer[Document], var
         specialChars.foreach(c => {
           word = word.replace(c, "")
         })
-        var _id = localDict.word2id.size
+        if (!word.equals("")) {
+          var _id = localDict.word2id.size
 
-        if (localDict.contains(word))
-          _id = localDict.getId(word)
+          if (localDict.contains(word))
+            _id = localDict.getId(word)
 
-        if (globalDict != null) {
-          //get the global id					
-          val id = globalDict.getId(word)
-          //println(id)
+          if (globalDict != null) {
+            //get the global id					
+            val id = globalDict.getId(word)
+            //println(id)
 
-          if (id != -1) {
+            if (id != -1) {
+              localDict.addWord(word)
+
+              lid2gid.put(_id, id)
+              ids.append(_id)
+            } else { //not in global dictionary
+              //do nothing currently
+            }
+          } else {
             localDict.addWord(word)
-
-            lid2gid.put(_id, id)
             ids.append(_id)
-          } else { //not in global dictionary
-            //do nothing currently
           }
-        } else {
-          localDict.addWord(word)
-          ids.append(_id)
         }
       })
 
